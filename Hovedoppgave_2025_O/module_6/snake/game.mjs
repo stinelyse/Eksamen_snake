@@ -72,14 +72,12 @@ export function baitIsEaten() {
   GameProps.score += GameProps.menu.baitValue; //get vi lagde i menu.
   console.log("score" + GameProps.score);
 
+
   GameProps.menu.baitValue = maxValue; // vi setter timeren tilbake til 50.
   
   console.log("Bait eaten!");
   GameProps.bait.update(); //spawner ny bait
 
-  // hente baitvalue og legge til gameprops.score
-  
-  // score++
 
   increaseGameSpeed(); // Increase game speed
 }
@@ -136,6 +134,7 @@ function updateGame() {
   switch (GameProps.gameStatus) {
     case EGameStatus.Playing:
       if (!GameProps.snake.update()) {
+        GameProps.menu.gameOverScore = GameProps.score; // Når slangen dør, lagres poengsummen til Game Over-skjermen
         GameProps.gameStatus = EGameStatus.GameOver;
         console.log("Game over!");
       }

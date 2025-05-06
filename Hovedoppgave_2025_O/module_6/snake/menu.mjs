@@ -34,14 +34,18 @@ export class TMenu { //når elementene i klassen er private #, så må draw ligg
         pos.y = 230;
         pos.x= 350;
         this.#spResume = new libSprite_v2.TSpriteButton(aSpriteCanvas, SheetData.Resume, pos);
-        this.#spResume.onClick = resumeGame; //hvordan får vi lissom ctrl Z. vi vil tilbake?
+        this.#spResume.onClick = resumeGame; 
 
-        pos.y = 230;
-        pos.x= 350;
-        this.#baitScore= new libSprite_v2.TSpriteNumber(aSpriteCanvas, SheetData.Number, pos);
-        this.#baitScore.scale = 0.5;
-        this.#baitScore.alpha = 0.5;
+       //trenger egen pos fordi denne spriten vises samtidig som playscore.
+        this.#baitScore= new libSprite_v2.TSpriteNumber(aSpriteCanvas, SheetData.Number,  new lib2d_v2.TPosition(10, 10));
+        this.#baitScore.scale = 0.8;
+        this.#baitScore.alpha = 0.8;
         this.#baitScore.value = 50; //value er score poeng.
+
+      
+        this.#spPlayScore= new libSprite_v2.TSpriteNumber(aSpriteCanvas, SheetData.Number, new lib2d_v2.TPosition(10, 90));
+        this.#spPlayScore.scale = 0.8;
+        this.#spPlayScore.alpha = 0.8;
 
 
         pos.y = 398;
@@ -53,6 +57,10 @@ export class TMenu { //når elementene i klassen er private #, så må draw ligg
         pos.x= 95;
         this.#spHome = new libSprite_v2.TSpriteButton(aSpriteCanvas, SheetData.Home, pos);
         this.#spHome.onClick = homeScreen;
+
+        pos.y = 250;
+        pos.x= 550;
+        this.#spGameOverScore= new libSprite_v2.TSpriteNumber(aSpriteCanvas, SheetData.Number, pos);
 
 
     }
@@ -66,9 +74,12 @@ draw() {
         this.#spGameOver.draw();
         this.#spRestart.draw();
         this.#spHome.draw();
+        this.#spGameOverScore.draw();
         break;
       case EGameStatus.Playing:
         this.#baitScore.draw();
+        this.#spPlayScore.value = GameProps.score; // Oppdaterer poengene under spill 
+        this.#spPlayScore.draw();
         break;
       case EGameStatus.Pause:
         this.#spResume.draw();
@@ -88,6 +99,12 @@ draw() {
      
     } // virker for -- 
 
+    get gameOverScore(){
+      return this.#spGameOverScore.value;
+    } // Henter poengsummen som skal vises på Game Over
 
+    set gameOverScore(aValue) {
+      this.#spGameOverScore.value = aValue;
+    } // Setter poengsummen som skal vises på Game Over
 
 } 
