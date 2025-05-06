@@ -91,16 +91,4 @@ draw() {
 
 
 
-   /*  onClick(event){
-      if (GameProps.gameStatus === EGameStatus.Idle){
-        this.#spButtonPlay.checkClick(event);
-      }
-      if (GameProps.gameStatus === EGameStatus.GameOver){
-        this.#spHome.checkClick(event);
-        this.#spRestart.checkClick(event);
-      }
-      if (GameProps.gameStatus === EGameStatus.Pause){
-        this.#spResume.checkClick(event);
-      }
-    } */
 } 
