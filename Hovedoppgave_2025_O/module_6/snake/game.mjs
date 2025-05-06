@@ -18,6 +18,7 @@ let gameSpeed = 4; // Game speed multiplier;
 let hndUpdateGame = null;
 export const EGameStatus = { Idle: 0, Playing: 1, Pause: 2, GameOver: 3 };
 
+const maxValue = 50;
 // prettier-ignore
 export const SheetData = {
   Head:     { x:   0, y:   0, width:  38, height:  38, count:  4 },
@@ -41,6 +42,8 @@ export const GameProps = {
   score: 0,
 };
 
+let hndUpdateBaitValue = null;
+
 //------------------------------------------------------------------------------------------
 //----------- Exported functions -----------------------------------------------------------
 //------------------------------------------------------------------------------------------
@@ -51,15 +54,30 @@ export function newGame() {
   GameProps.bait = new TBait(spcvs); // Initialize bait with a starting position
   gameSpeed = 4; // Reset game speed
   GameProps.score = 0; //resetter når nytt game
+  GameProps.menu.baitValue = maxValue;
+
+  if (hndUpdateBaitValue === null ){
+    hndUpdateBaitValue = setInterval(() => {
+      GameProps.menu.baitValue--;
+    
+    }, 1000);
+  }
   
+  
+
 }
 
 export function baitIsEaten() {
 
-  GameProps.score +=10;
+  GameProps.score += GameProps.menu.baitValue; //get vi lagde i menu.
+  console.log("score" + GameProps.score);
+
+  GameProps.menu.baitValue = maxValue; // vi setter timeren tilbake til 50.
   
   console.log("Bait eaten!");
   GameProps.bait.update(); //spawner ny bait
+
+  // hente baitvalue og legge til gameprops.score
   
   // score++
 
@@ -143,6 +161,7 @@ export function homeScreen(){
 
 export function resumeGame(){
   GameProps.gameStatus = EGameStatus.Playing;
+  
 }
 //-----------------------------------------------------------------------------------------
 //----------- Event handlers --------------------------------------------------------------
@@ -179,3 +198,5 @@ function onKeyDown(event) {
 
 spcvs.loadSpriteSheet("./Media/spriteSheet.png", loadGame);
 document.addEventListener("keydown", onKeyDown);
+
+// alle attributtene feks knapper. kan settes til false og forsvinne. visible = false usynlig, men kan klikkes, disabeled = settes false eller true og kan være usynlig og ikke klikkbar. . toggle funksjon = sette til false eller true.

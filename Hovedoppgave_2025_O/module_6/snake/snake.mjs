@@ -81,7 +81,9 @@ class TSnakeHead extends TSnakePart {
       /* Decrease the score if the snake head is not on a bait cell */
     }
     boardCellInfo.infoType = EBoardCellInfoType.Snake; // Set the cell to Snake
-    GameProps.menu.baitValue--;
+
+  
+    
     return true; // No collision, continue
   }
 

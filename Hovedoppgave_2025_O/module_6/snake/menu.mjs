@@ -20,10 +20,10 @@ export class TMenu { //når elementene i klassen er private #, så må draw ligg
         this.#spcvs = aSpriteCanvas;
         GameProps.gameStatus = EGameStatus.Idle;
 
-        const possp = new lib2d_v2.TPosition(350, 230); //utgangspunkt posisjon for alt
+        const pos = new lib2d_v2.TPosition(350, 230); //utgangspunkt posisjon for alt
 
         pos.y = 230;
-        pos.x= 350;
+        pos.x = 350;
         this.#spButtonPlay = new libSprite_v2.TSpriteButton(aSpriteCanvas, SheetData.Play, pos);
         this.#spButtonPlay.onClick = startGame;
 
@@ -34,7 +34,7 @@ export class TMenu { //når elementene i klassen er private #, så må draw ligg
         pos.y = 230;
         pos.x= 350;
         this.#spResume = new libSprite_v2.TSpriteButton(aSpriteCanvas, SheetData.Resume, pos);
-        this.#spResume.onClick = resumeGame;
+        this.#spResume.onClick = resumeGame; //hvordan får vi lissom ctrl Z. vi vil tilbake?
 
         pos.y = 230;
         pos.x= 350;
@@ -65,7 +65,6 @@ draw() {
       case EGameStatus.GameOver:
         this.#spGameOver.draw();
         this.#spRestart.draw();
-        //this.#spScore.draw();
         this.#spHome.draw();
         break;
       case EGameStatus.Playing:
