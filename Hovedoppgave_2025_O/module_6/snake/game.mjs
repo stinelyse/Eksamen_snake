@@ -44,6 +44,7 @@ export const GameProps = {
   tailTimeOut: null,
 };
 
+
 let hndUpdateBaitValue = null;
 
 //------------------------------------------------------------------------------------------
@@ -59,11 +60,13 @@ export function newGame() {
   GameProps.menu.baitValue = maxValue;
   GameProps.menu.playScore = 0;
 
+
+  //Dette er farten som snaken er i starten.
   clearInterval(hndUpdateGame); 
   requestAnimationFrame(drawGame);
   hndUpdateGame = setInterval(updateGame, 1000 / gameSpeed);
 
-
+  //Bait timer
   if (hndUpdateBaitValue === null ){
     hndUpdateBaitValue = setInterval(() => {
       GameProps.menu.baitValue--;
@@ -122,6 +125,7 @@ function drawGame() {
   // Clear the canvas
   spcvs.clearCanvas();
 
+  //Tegner gameboardet
   switch (GameProps.gameStatus) {
     case EGameStatus.Playing:
       GameProps.menu.draw();
@@ -160,7 +164,7 @@ function updateGame() {
 
 
 function increaseGameSpeed() {
-  /* Increase game speed logic here */
+// Øker hastigheten til snake ila spillet
   const maxSpeed = 15;
   if (gameSpeed < maxSpeed) {
     const increaseSpeed = 0.5;
@@ -172,17 +176,23 @@ function increaseGameSpeed() {
     }
   }
 
-export function startGame(){
+  //Har laget funksjoner som forteller om statusen er idle, playing, pause, gameover.
+export function startGame(){ 
   newGame();
   GameProps.gameStatus = EGameStatus.Playing;
+ 
 }
 
 export function homeScreen(){
   GameProps.gameStatus = EGameStatus.Idle;
+  
+
 }
 
 export function resumeGame(){
   GameProps.gameStatus = EGameStatus.Playing;
+  
+ 
   
 }
 //-----------------------------------------------------------------------------------------

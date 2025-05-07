@@ -15,7 +15,7 @@ export class TMenu { //når elementene i klassen er private #, så må draw ligg
     #spHome;
     #spcvs;
     #baitScore;
-    
+
     constructor(aSpriteCanvas) {
         this.#spcvs = aSpriteCanvas;
         GameProps.gameStatus = EGameStatus.Idle;
@@ -26,7 +26,8 @@ export class TMenu { //når elementene i klassen er private #, så må draw ligg
         pos.x = 350;
         this.#spButtonPlay = new libSprite_v2.TSpriteButton(aSpriteCanvas, SheetData.Play, pos);
         this.#spButtonPlay.onClick = startGame;
-
+        this.#spButtonPlay.animateSpeed = 17;
+        
         pos.y = 50;
         pos.x= 30;
         this.#spGameOver = new libSprite_v2.TSprite(aSpriteCanvas, SheetData.GameOver, pos);
@@ -35,6 +36,7 @@ export class TMenu { //når elementene i klassen er private #, så må draw ligg
         pos.x= 350;
         this.#spResume = new libSprite_v2.TSpriteButton(aSpriteCanvas, SheetData.Resume, pos);
         this.#spResume.onClick = resumeGame; 
+        this.#spResume.animateSpeed = 17;
 
        //trenger egen pos fordi denne spriten vises samtidig som playscore.
         this.#baitScore= new libSprite_v2.TSpriteNumber(aSpriteCanvas, SheetData.Number,  new lib2d_v2.TPosition(10, 10));
@@ -67,21 +69,67 @@ export class TMenu { //når elementene i klassen er private #, så må draw ligg
 
 draw() { 
     switch (GameProps.gameStatus) {
+
       case EGameStatus.Idle:
         this.#spButtonPlay.draw();
+        this.#spButtonPlay.visible = true; 
+        this.#spButtonPlay.disable = false; 
+        //skjuler game over knappene
+        this.#spHome.visible = false; 
+        this.#spHome.disable = true;
+        this.#spRestart.visible = false;
+        this.#spRestart.disable = true;
+        // skjuler resume knappen
+        this.#spResume.visible = false;
+        this.#spResume.disable = true;
+        
         break;
+
       case EGameStatus.GameOver:
         this.#spGameOver.draw();
         this.#spRestart.draw();
         this.#spHome.draw();
         this.#spGameOverScore.draw();
+        //skjuler play knappen
+        this.#spButtonPlay.visible = false; 
+        this.#spButtonPlay.disable = true; 
+        //skjuler resume knappen
+        this.#spResume.visible = false; 
+        this.#spResume.disable = true;
+        //Game over knappene er synlig
+        this.#spHome.visible = true;
+        this.#spHome.disable = false;
+        this.#spRestart.visible = true;
+        this.#spRestart.disable = false;
+        
         break;
-      case EGameStatus.Playing:
+
+      case EGameStatus.Playing: 
         this.#baitScore.draw();
         this.#spPlayScore.draw();
+        //skjuler alle knappene
+        this.#spRestart.visible = false;
+        this.#spRestart.disable = true;
+        this.#spHome.visible = false;
+        this.#spHome.disable = true;
+        this.#spResume.visible = false; 
+        this.#spResume.disable = true;
+        this.#spButtonPlay.visible = false; 
+        this.#spButtonPlay.disable = true;
         break;
+
       case EGameStatus.Pause:
         this.#spResume.draw();
+       //viser resume knappen
+        this.#spResume.visible = true; 
+        this.#spResume.disable = false;
+      //skjuler alle de andre knappene
+        this.#spHome.visible = false;
+        this.#spHome.disable = true;
+        this.#spRestart.visible = false; 
+        this.#spRestart.disable = true;
+        this.#spButtonPlay.visible = false; 
+        this.#spButtonPlay.disable = true; 
         break;
         }   
     }
@@ -113,7 +161,7 @@ draw() {
     set playScore(aValue) {
       this.#spPlayScore.value = aValue;
     }
-
+  
     
+  }
 
-} 

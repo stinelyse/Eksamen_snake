@@ -211,25 +211,32 @@ class TSnakeTail extends TSnakePart {
   }
 
   update(){
-    switch (this.direction) {
-      case EDirection.Up:
-        this.boardCell.row--;
-        break;
-      case EDirection.Right:
-        this.boardCell.col++;
-        break;
-      case EDirection.Left:
-        this.boardCell.col--;
-        break;
-      case EDirection.Down:
-        this.boardCell.row++;
-        break;
-    }
-    const boardCellInfo = GameProps.gameBoard.getCell(this.boardCell.row, this.boardCell.col);
+    let boardCellInfo = GameProps.gameBoard.getCell(this.boardCell.row, this.boardCell.col);
     boardCellInfo.infoType = EBoardCellInfoType.Empty; // Clear the cell, when the tail moves
     this.direction = boardCellInfo.direction;
     this.index = this.direction;
     super.update();
+  
+
+  switch (this.direction) {
+    case EDirection.Up:
+      this.boardCell.row--;
+      break;
+    case EDirection.Right:
+      this.boardCell.col++;
+      break;
+    case EDirection.Left:
+      this.boardCell.col--;
+      break;
+    case EDirection.Down:
+      this.boardCell.row++;
+      break;
+  }
+  
+  boardCellInfo = GameProps.gameBoard.getCell(this.boardCell.row, this.boardCell.col);
+  this.direction = boardCellInfo.direction;
+  this.index = this.direction;
+  super.update();
   }
 
 } // class TSnakeTail
@@ -268,8 +275,15 @@ export class TSnake {
 
   //Returns true if the snake is alive
   update(){
+
     if (this.#isDead) {
       return false; // Snake is dead, do not continue
+    }
+    if (baitEaten) {
+      baitEaten = false;
+    }
+    else {
+      this.#tail.update();  
     }
     if(this.#head.update()) {
       for (let i = 0; i < this.#body.length; i++) {
@@ -277,12 +291,7 @@ export class TSnake {
       }
 
       // hvis bait er eaten, skal ikke tail oppdateres denne gangen for å flytte den en celle bak
-      if (baitEaten) {
-        baitEaten = false;
-      }
-      else {
-        this.#tail.update();  
-      }
+    
     }else if(!this.#isDead){
       this.#isDead = true;
       return false; // Collision detected, do not continue
