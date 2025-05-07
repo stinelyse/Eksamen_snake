@@ -18,7 +18,8 @@ let gameSpeed = 4; // Game speed multiplier;
 let hndUpdateGame = null;
 export const EGameStatus = { Idle: 0, Playing: 1, Pause: 2, GameOver: 3 };
 
-const maxValue = 50;
+const maxValue = 30;
+
 // prettier-ignore
 export const SheetData = {
   Head:     { x:   0, y:   0, width:  38, height:  38, count:  4 },
@@ -40,6 +41,7 @@ export const GameProps = {
   bait: null, 
   menu: null,
   score: 0,
+  tailTimeOut: null,
 };
 
 let hndUpdateBaitValue = null;
@@ -52,11 +54,13 @@ export function newGame() {
   GameProps.gameBoard = new TGameBoard();
   GameProps.snake = new TSnake(spcvs, new TBoardCell(5, 5)); // Initialize snake with a starting position
   GameProps.bait = new TBait(spcvs); // Initialize bait with a starting position
-  gameSpeed = 3; // Reset game speed
+  gameSpeed = 4; // Reset game speed
   GameProps.score = 0; //resetter når nytt game
   GameProps.menu.baitValue = maxValue;
+  GameProps.menu.playScore = 0;
 
   clearInterval(hndUpdateGame); 
+  requestAnimationFrame(drawGame);
   hndUpdateGame = setInterval(updateGame, 1000 / gameSpeed);
 
 
@@ -79,12 +83,17 @@ export function baitIsEaten() {
 
 
   GameProps.menu.baitValue = maxValue; // vi setter timeren tilbake til 50.
+  GameProps.menu.playScore = GameProps.score; // Oppdaterer poengene i sammtid under spill 
   
   console.log("Bait eaten!");
   GameProps.bait.update(); //spawner ny bait
 
 
   increaseGameSpeed(); // Increase game speed
+
+ GameProps.snake.expand();
+
+ //const tailTimeOut = setTimeout(Body, 1000);
 
 }
 
@@ -103,10 +112,10 @@ function loadGame() {
   GameProps.menu = new TMenu(spcvs);
   newGame();
 
-  requestAnimationFrame(drawGame);
-  console.log("Game canvas is rendering!");
-  hndUpdateGame = setInterval(updateGame, 1000 / gameSpeed); // Update game every 1000ms / gameSpeed
-  console.log("Game canvas is updating!");
+  //requestAnimationFrame(drawGame);
+  //console.log("Game canvas is rendering!");
+  //hndUpdateGame = setInterval(updateGame, 1000 / gameSpeed); 
+  //console.log("Game canvas is updating!");
 }
 
 function drawGame() {
@@ -152,9 +161,9 @@ function updateGame() {
 
 function increaseGameSpeed() {
   /* Increase game speed logic here */
-  const maxSpeed = 30;
+  const maxSpeed = 15;
   if (gameSpeed < maxSpeed) {
-    const increaseSpeed = 10;
+    const increaseSpeed = 0.5;
     gameSpeed = gameSpeed + increaseSpeed;
 
     clearInterval(hndUpdateGame);

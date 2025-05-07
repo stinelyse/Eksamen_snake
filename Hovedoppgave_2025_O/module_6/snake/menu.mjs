@@ -62,7 +62,7 @@ export class TMenu { //når elementene i klassen er private #, så må draw ligg
         pos.x= 550;
         this.#spGameOverScore= new libSprite_v2.TSpriteNumber(aSpriteCanvas, SheetData.Number, pos);
 
-
+        
     }
 
 draw() { 
@@ -78,7 +78,6 @@ draw() {
         break;
       case EGameStatus.Playing:
         this.#baitScore.draw();
-        this.#spPlayScore.value = GameProps.score; // Oppdaterer poengene under spill 
         this.#spPlayScore.draw();
         break;
       case EGameStatus.Pause:
@@ -106,5 +105,15 @@ draw() {
     set gameOverScore(aValue) {
       this.#spGameOverScore.value = aValue;
     } // Setter poengsummen som skal vises på Game Over
+
+    get playScore() {
+      return this.#spPlayScore.value;
+    }
+
+    set playScore(aValue) {
+      this.#spPlayScore.value = aValue;
+    }
+
+    
 
 } 

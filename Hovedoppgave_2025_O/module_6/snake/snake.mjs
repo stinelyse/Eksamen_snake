@@ -90,11 +90,12 @@ class TSnakeHead extends TSnakePart {
   checkCollision() {
     let collision = this.boardCell.row < 0 || this.boardCell.row >= GameProps.gameBoard.rows || this.boardCell.col < 0 || this.boardCell.col >= GameProps.gameBoard.cols;
     if(!collision) {
-      const boardCellInfo = GameProps.gameBoard.getCell(this.boardCell.row, this.boardCell.col);
-      collision = boardCellInfo.infoType === EBoardCellInfoType.Snake;
+      // fixy
+      const boardCellInfo = GameProps.gameBoard.getCell(this.boardCell.row, this.boardCell.col); // denne koden gjør at den bugger og kolliderer med seg selv = game over
+      collision = boardCellInfo.infoType === EBoardCellInfoType.Snake; //denne og
     }
     return collision; // Collision detected
-  }
+  } 
 }
 
 class TSnakeBody extends TSnakePart {
@@ -178,7 +179,24 @@ class TSnakeBody extends TSnakePart {
   }
 
   clone(){
-    const newBody = new TSnakeBody(this.spcvs, new TBoardCell(this.boardCell.col, this.boardCell.row));
+    // kloner slange-kroppen og setter nye posisjonen avhenging av retning
+    var col = 0;
+    var row = 0;
+    switch (this.direction) {
+      case EDirection.Up:
+        row++;
+        break;
+      case EDirection.Right:
+        col--;
+        break;
+      case EDirection.Left:
+        col++;
+        break;
+      case EDirection.Down:
+        row--;
+        break;
+    }
+    const newBody = new TSnakeBody(this.spcvs, new TBoardCell(this.boardCell.col + col, this.boardCell.row + row));
     newBody.index = this.index;
     newBody.direction = this.direction;
     return newBody;
@@ -217,6 +235,8 @@ class TSnakeTail extends TSnakePart {
 } // class TSnakeTail
 
 
+let baitEaten = false;
+
 export class TSnake {
   #isDead = false;
   #head = null;
@@ -229,6 +249,14 @@ export class TSnake {
     col--;
     this.#tail = new TSnakeTail(aSpriteCanvas, new TBoardCell(col, aBoardCell.row));
   } // constructor
+
+  expand() {
+    // setter baitEaten til true for å flytte tail en celle lenger bak
+    baitEaten = true;
+    // kloner body og legger den bakerst i array
+    const newBody = this.#body[this.#body.length - 1].clone();
+    this.#body.push(newBody);
+  }
 
   draw() {
     this.#head.draw();
@@ -247,7 +275,14 @@ export class TSnake {
       for (let i = 0; i < this.#body.length; i++) {
         this.#body[i].update();
       }
-      this.#tail.update();  
+
+      // hvis bait er eaten, skal ikke tail oppdateres denne gangen for å flytte den en celle bak
+      if (baitEaten) {
+        baitEaten = false;
+      }
+      else {
+        this.#tail.update();  
+      }
     }else if(!this.#isDead){
       this.#isDead = true;
       return false; // Collision detected, do not continue
