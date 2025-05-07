@@ -258,4 +258,5 @@ export class TSnake {
   setDirection(aDirection) {
     this.#head.setDirection(aDirection);
   } // setDirection
+
 }

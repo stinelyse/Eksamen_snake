@@ -52,9 +52,13 @@ export function newGame() {
   GameProps.gameBoard = new TGameBoard();
   GameProps.snake = new TSnake(spcvs, new TBoardCell(5, 5)); // Initialize snake with a starting position
   GameProps.bait = new TBait(spcvs); // Initialize bait with a starting position
-  gameSpeed = 4; // Reset game speed
+  gameSpeed = 3; // Reset game speed
   GameProps.score = 0; //resetter når nytt game
   GameProps.menu.baitValue = maxValue;
+
+  clearInterval(hndUpdateGame); 
+  hndUpdateGame = setInterval(updateGame, 1000 / gameSpeed);
+
 
   if (hndUpdateBaitValue === null ){
     hndUpdateBaitValue = setInterval(() => {
@@ -63,6 +67,7 @@ export function newGame() {
     }, 1000);
   }
   
+
   
 
 }
@@ -80,6 +85,7 @@ export function baitIsEaten() {
 
 
   increaseGameSpeed(); // Increase game speed
+
 }
 
 
@@ -146,8 +152,16 @@ function updateGame() {
 
 function increaseGameSpeed() {
   /* Increase game speed logic here */
-  console.log("Increase game speed!");
-}
+  const maxSpeed = 30;
+  if (gameSpeed < maxSpeed) {
+    const increaseSpeed = 10;
+    gameSpeed = gameSpeed + increaseSpeed;
+
+    clearInterval(hndUpdateGame);
+    hndUpdateGame = setInterval(updateGame, 1000 / gameSpeed);
+    console.log("Increase game speed!");
+    }
+  }
 
 export function startGame(){
   newGame();

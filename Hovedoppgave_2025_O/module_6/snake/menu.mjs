@@ -65,7 +65,7 @@ export class TMenu { //når elementene i klassen er private #, så må draw ligg
 
     }
 
-draw() {
+draw() { 
     switch (GameProps.gameStatus) {
       case EGameStatus.Idle:
         this.#spButtonPlay.draw();
