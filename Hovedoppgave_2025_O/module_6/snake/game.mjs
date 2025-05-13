@@ -94,7 +94,7 @@ export function baitIsEaten() {
 
   increaseGameSpeed(); // Increase game speed
 
- GameProps.snake.expand();
+ GameProps.snake.expand(GameProps.menu.baitValue);
 
  //const tailTimeOut = setTimeout(Body, 1000);
 
