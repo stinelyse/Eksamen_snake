@@ -18,7 +18,8 @@ let gameSpeed = 4; // Game speed multiplier;
 let hndUpdateGame = null;
 export const EGameStatus = { Idle: 0, Playing: 1, Pause: 2, GameOver: 3 };
 
-const maxValue = 30;
+const maxValue = 30; //Max verdi for timeren.
+
 
 // prettier-ignore
 export const SheetData = {
@@ -45,7 +46,7 @@ export const GameProps = {
 };
 
 
-let hndUpdateBaitValue = null;
+let hndUpdateBaitValue = null; 
 
 //------------------------------------------------------------------------------------------
 //----------- Exported functions -----------------------------------------------------------
@@ -57,14 +58,16 @@ export function newGame() {
   GameProps.bait = new TBait(spcvs); // Initialize bait with a starting position
   gameSpeed = 4; // Reset game speed
   GameProps.score = 0; //resetter når nytt game
-  GameProps.menu.baitValue = maxValue;
+  GameProps.menu.baitValue = maxValue; 
   GameProps.menu.playScore = 0;
 
 
-  //Dette er farten som snaken er i starten.
+  //Dette er farten som snaken er i starten, som vi nå resetter. 
   clearInterval(hndUpdateGame); 
   requestAnimationFrame(drawGame);
   hndUpdateGame = setInterval(updateGame, 1000 / gameSpeed);
+
+
 
   //Bait timer
   if (hndUpdateBaitValue === null ){
@@ -73,7 +76,6 @@ export function newGame() {
     
     }, 1000);
   }
-  
 
   
 
@@ -81,11 +83,11 @@ export function newGame() {
 
 export function baitIsEaten() {
 
-  GameProps.score += GameProps.menu.baitValue; //get vi lagde i menu.
+  GameProps.score += GameProps.menu.baitValue; //baitValue er en get vi henter ut i menu. 
   console.log("score" + GameProps.score);
 
 
-  GameProps.menu.baitValue = maxValue; // vi setter timeren tilbake til 50.
+  GameProps.menu.baitValue = maxValue; // vi setter timeren tilbake til 30.
   GameProps.menu.playScore = GameProps.score; // Oppdaterer poengene i sammtid under spill 
   
   console.log("Bait eaten!");
@@ -94,9 +96,7 @@ export function baitIsEaten() {
 
   increaseGameSpeed(); // Increase game speed
 
- GameProps.snake.expand(GameProps.menu.baitValue);
-
- //const tailTimeOut = setTimeout(Body, 1000);
+ GameProps.snake.expand(GameProps.menu.baitValue); // setter antall elementer som skal inn i slangen
 
 }
 
@@ -109,20 +109,17 @@ function loadGame() {
   cvs.width = GameBoardSize.Cols * SheetData.Head.width;
   cvs.height = GameBoardSize.Rows * SheetData.Head.height;
 
-  GameProps.gameStatus = EGameStatus.Playing; // change game status to Idle
+  GameProps.gameStatus = EGameStatus.Idle; 
 
   /* Create the game menu here */ 
   GameProps.menu = new TMenu(spcvs);
-  newGame();
 
-  //requestAnimationFrame(drawGame);
-  //console.log("Game canvas is rendering!");
-  //hndUpdateGame = setInterval(updateGame, 1000 / gameSpeed); 
-  //console.log("Game canvas is updating!");
+  newGame();
 }
 
 function drawGame() {
   // Clear the canvas
+
   spcvs.clearCanvas();
 
   //Tegner gameboardet
@@ -155,11 +152,9 @@ function updateGame() {
       if (!GameProps.snake.update()) {
         GameProps.menu.gameOverScore = GameProps.score; // Når slangen dør, lagres poengsummen til Game Over-skjermen
         GameProps.gameStatus = EGameStatus.GameOver;
-        console.log("Game over!");
       }
       break;
   }
-  
 }
 
 
@@ -178,12 +173,13 @@ function increaseGameSpeed() {
 
   //Har laget funksjoner som forteller om statusen er idle, playing, pause, gameover.
 export function startGame(){ 
-  newGame();
+  newGame(); //Når du trykker på restart knappen, nytt game. Kunne ha satt newGame under bare gameOver, men vi har gått denne veien.
   GameProps.gameStatus = EGameStatus.Playing;
  
 }
 
 export function homeScreen(){
+  newGame(); //Uten denne så resetter ikke scoren seg.
   GameProps.gameStatus = EGameStatus.Idle;
   
 
@@ -231,4 +227,3 @@ function onKeyDown(event) {
 spcvs.loadSpriteSheet("./Media/spriteSheet.png", loadGame);
 document.addEventListener("keydown", onKeyDown);
 
-// alle attributtene feks knapper. kan settes til false og forsvinne. visible = false usynlig, men kan klikkes, disabeled = settes false eller true og kan være usynlig og ikke klikkbar. . toggle funksjon = sette til false eller true.

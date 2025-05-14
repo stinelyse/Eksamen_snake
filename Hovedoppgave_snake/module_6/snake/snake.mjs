@@ -124,13 +124,11 @@ class TSnakeHead extends TSnakePart {
       this.boardCell.col < 0 ||
       this.boardCell.col >= GameProps.gameBoard.cols;
     if (!collision) {
-      // fixy
       const boardCellInfo = GameProps.gameBoard.getCell(
         this.boardCell.row,
         this.boardCell.col
-      ); // denne koden gjør at den bugger og kolliderer med seg selv = game over
-      collision = boardCellInfo.infoType === EBoardCellInfoType.Snake; //denne og
-      console.log("Snake hit itself");
+      ); 
+      collision = boardCellInfo.infoType === EBoardCellInfoType.Snake; //Hvis man fjerner denne koden, så kan slangen kollidere med seg selv uten å dø.
     }
     return collision; // Collision detected
   }
@@ -235,7 +233,7 @@ class TSnakeBody extends TSnakePart {
   }
 
   clone_new() {
-    // kloner slange-kroppen og setter nye posisjonen avhenging av retning
+    // kloner slange-kroppen og setter nye posisjoner avhenging av retning
     var col = 0;
     var row = 0;
     switch (this.direction) {
@@ -320,19 +318,10 @@ export class TSnake {
   } // constructor
 
   expand(aBaitValue) {
-    // setter baitEaten til true for å flytte tail en celle lenger bak
     GameProps.menu.baitValue = aBaitValue;
-    const dev = aBaitValue / 6;
-    
-
+    const dev = aBaitValue / 6; // Antall poeng blir delt på 6, og så mange elemnter legges til kroppen for vanskeligere spill.
     baitEaten += Math.ceil(dev); // settes til antall elementer som skal inn i slangen.
-
-    // kloner body og legger den bakerst i array
-
- 
   }
-
-  // når den er mindre enn 10 og spiser eple, så skal den expande med 5
 
   draw() {
     this.#head.draw();
@@ -350,9 +339,9 @@ export class TSnake {
     let newClone = null;
     if (baitEaten) {
       baitEaten -= 1; //mink denne med 1.
-      newClone = this.#body[this.#body.length - 1].clone();
+      newClone = this.#body[this.#body.length - 1].clone(); //bruker array til å legge til ny element før halen.
     } else {
-      this.#tail.update();
+      this.#tail.update();    // hvis bait er eaten, skal ikke tail oppdateres denne gangen for å flytte den en celle bak
     }
     
     if (this.#head.update()) {
@@ -365,7 +354,6 @@ export class TSnake {
         this.#body.push(newClone);
       }
 
-      // hvis bait er eaten, skal ikke tail oppdateres denne gangen for å flytte den en celle bak
     } else if (!this.#isDead) {
       this.#isDead = true;
       return false; // Collision detected, do not continue

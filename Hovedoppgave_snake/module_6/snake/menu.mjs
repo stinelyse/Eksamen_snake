@@ -5,7 +5,7 @@ import { SheetData, GameProps, EGameStatus} from "./game.mjs";
 import { startGame, homeScreen, resumeGame } from "./game.mjs";
 /* Use this file to create the menu for the snake game. */
 
-export class TMenu { //når elementene i klassen er private #, så må draw ligge inne i klassen.
+export class TMenu { //når elementene i klassen er private #, så må funksjonen draw ligge inne i klassen.
     #spButtonPlay;
     #spGameOver;
     #spResume;
@@ -17,20 +17,20 @@ export class TMenu { //når elementene i klassen er private #, så må draw ligg
     #baitScore;
 
     constructor(aSpriteCanvas) {
-        this.#spcvs = aSpriteCanvas;
+        this.#spcvs = aSpriteCanvas; //Bruker this for å hente ut fra klassen. 
         GameProps.gameStatus = EGameStatus.Idle;
 
         const pos = new lib2d_v2.TPosition(350, 230); //utgangspunkt posisjon for alt
 
-        pos.y = 230;
+        pos.y = 230; //posisjon
         pos.x = 350;
-        this.#spButtonPlay = new libSprite_v2.TSpriteButton(aSpriteCanvas, SheetData.Play, pos);
+        this.#spButtonPlay = new libSprite_v2.TSpriteButton(aSpriteCanvas, SheetData.Play, pos); //Bruker TSpriteButton siden dette er en knapp. 
         this.#spButtonPlay.onClick = startGame;
         this.#spButtonPlay.animateSpeed = 17;
         
         pos.y = 50;
         pos.x= 30;
-        this.#spGameOver = new libSprite_v2.TSprite(aSpriteCanvas, SheetData.GameOver, pos);
+        this.#spGameOver = new libSprite_v2.TSprite(aSpriteCanvas, SheetData.GameOver, pos); //Bruker TSprite fordi det er en sprite som ikke skal klikkes på. 
 
         pos.y = 230;
         pos.x= 350;
@@ -39,7 +39,7 @@ export class TMenu { //når elementene i klassen er private #, så må draw ligg
         this.#spResume.animateSpeed = 17;
 
        //trenger egen pos fordi denne spriten vises samtidig som playscore.
-        this.#baitScore= new libSprite_v2.TSpriteNumber(aSpriteCanvas, SheetData.Number,  new lib2d_v2.TPosition(10, 10));
+        this.#baitScore= new libSprite_v2.TSpriteNumber(aSpriteCanvas, SheetData.Number,  new lib2d_v2.TPosition(10, 10)); //Bruker TSpriteNumber siden dette er et nummer.
         this.#baitScore.scale = 0.8;
         this.#baitScore.alpha = 0.8;
         this.#baitScore.value = 50; //value er score poeng.
@@ -67,7 +67,7 @@ export class TMenu { //når elementene i klassen er private #, så må draw ligg
         
     }
 
-draw() { 
+draw() { //Tegner menyen utifra status
     switch (GameProps.gameStatus) {
 
       case EGameStatus.Idle:
@@ -101,6 +101,7 @@ draw() {
         this.#spHome.disable = false;
         this.#spRestart.visible = true;
         this.#spRestart.disable = false;
+        newGame(); //Starter nytt game etter gameover, slik at alt resetter seg. 
         
         break;
 
@@ -134,7 +135,7 @@ draw() {
         }   
     }
 
-    get baitValue(){
+    get baitValue(){ 
       return this.#baitScore.value;
       
     }
